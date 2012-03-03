@@ -1,0 +1,7 @@
+Only &&, ||, comma and conditional (?:) operators specify the order in
+which their operands are evaluated. All other operators do NOT guaranttee
+the order. The behaviour of programs dependent on certain operands evaluation
+order of those operator are undefined.
+
+f1() * f2(); // whether f1 will be called before or after f2() is unknow
+if (ia[index++] > ia[index]) // oops! does NOT define the evaluation order
