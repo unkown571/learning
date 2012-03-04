@@ -1,0 +1,128 @@
+There are two forms of regular expressions (REs):
+
+o POSIX Extended Regular Expression (ERE)
+
+	An ERE is one or more nonempty branches, seperated by '|'.  It matches 
+	one of the branches.
+
+	A branch is one or more pieces, concatenated. It matches a match for 
+	the first, followed  by a match of the second, etc.
+
+	A piece is an atom possibly followed by  a single '*', '+', '?' or 
+	bound.
+		An atom followed by '*' matches a sequence of zero or more 
+		matches of the atom.
+		An atom followed by '+' matches a sequence of one or more 
+		matches of the atom.
+		An atom followed by '?' matches a sequence of zero or one
+		matches of the atom.
+		A bound is one of the following:
+		{n}	matches a sequence of exactly n matches of the atom.
+		{n,}	matches a sequence of n or more matches of the atom.
+		{m,n}	matches a sequces of through m to n (inclusive) matches				of the atom.
+	An atom is :
+	a RE enclosed in "()"	matches a match for the RE
+	an empty "()"		matches the null string
+	a bracket expression
+	'.'			matches any single character
+	'^'			matches null string at the beginning of a 
+				line
+	'$'			matches the null string at the end of a line
+	'\' followed by one of "^[$()|*+?{\"
+				mathes that character as an ordinary character
+	'\' followed by any other character
+				matches that character as if '\' is not present
+	'{' followed by a non-digit character
+				matches them as ordinary characters, not the 
+				beginning of a bound
+
+	A bracket expression is:
+	[list_of_characters]	matches one of the character in the list
+	[^list_of_characters]	matches any single character not in the list
+	[0-9]			matches one of the decimal digit in ASCII
+	[a-z]			matches one of the characters in the range
+	[]a-z]			to make the literal ']' in the list, it must 
+				be the first
+	[-0-9]			any number or a '-'
+	[0-9-]			same as above, any number or a '-'
+	[^-0-9]			any character except a number or a '-'
+	[^]]			matches any single character but ']'
+	[[:class_name:]]	matches one of the characters in belonging to 
+				class_name, [:class_name:] stands for the list
+				of all characters belonging to that class.
+				class_name is one of the following:
+				  alnum digit punct alpha graph space
+				  blank lower upper cntrl print xdigit
+	[.char_seq.]		a collating element as if is a single character
+	[=collat_elem=]		a collating element enclosed in "[=" and "=]" 
+				is an equivalent class
+
+Note: the default matching behaviour of REs (including subexpressions) is greedy, instead of lazy. That is, it will match the longest possible substring.
+	
+
+o POSIX Basic Regular Expression (BRE)
+	BRE has the following differences with ERE:
+
+	'|', '+', '?' are ordinary characters, and there is no equivalent for 
+	their functionality.
+
+	the delimiters for bound are "\{" and "\}", with '{' and '}' by 
+	themselves are ordinary characters.
+
+	The parentheses for nested subexpressions are "\(" and "\)", with '('
+	and ')' by themselves are ordinary characters.
+
+	'^' is an ordinary character except at the beginning of the RE or
+	at the beginning of a parenthesized subexpression.
+
+	'$' is an ordinary character except at the end of the RE or at the
+	end of a parenthesized subexpression.
+
+	'*' is an ordinary character except at the beginning of the RE or
+	at the beginning of a parenthesized subexpression.
+
+	there is a NEW atom which is not supported in ERE, back reference:
+	'\' followed by nonzero decimal digit d matches the same sequence of 
+	characters matched by the dth parenthesized subexpression.
+
+References:
+[1] man 7 regex
+[2] http://en.wikipedia.org/wiki/Regular_expression
+[3] http://www.infoq.com/cn/news/2011/07/regular-expressions-6-POSIX
+
+The following is from ref3:
+
+下面的表格简要说明了几种POSIX流派的区别[1]（其实，现在的BRE和ERE在功能上并没
+有什么区别，主要的差异是在元字符的转义上）。
+
+几种POSIX流派的说明
+
+流派			说明			工具 
+--------------------------------------------------------------------------
+BRE	(、)、{、}都必须转义使用，不支持	grep、sed、vi（但vi支
+	+、?、|i				持这些多选结构和反向引用）
+GNU BRE (、)、{、}、+、?、|都必须转义使用	GNU grep、GNU sed
+
+ERE	元字符不必转义，+、?、(、)、{、}、	egrep、awk
+	|可以直接使用，\1、\2的支持不确定
+
+GNU ERE 元字符不必转义，+、?、(、)、{、}、	grep –E、GNU awk
+	可以直接使用，支持\1、\2
+--------------------------------------------------------------------------
+	
+
+为了方便查阅，下面再用一张表格列出基本的正则功能在常用工具中的表示法，其中的工具GNU的版本为准。
+
+常用Linux/Unix工具中的表示法
+
+PCRE记	vi/vim	grep	awk	sed
+*	*	*	*	* 
++	\+	\+	+	\+
+?	\=	\?	?	\?  
+{m,n}	\{m,n}	\{m,n\}	{m,n}	\{m,n\}
+\b*	\< \>	\< \>	\< \>	\< \>
+(…|…)	\(…\|…\) \(…\|…\) (…|…) (…|…)
+(…)	\(…\)	\(…\)	(…)	(…)
+\1\2	\1\2	\1\2	不支持	\1\2
+
+注：PCRE中常用\b来表示“单词的起始或结束位置”，但Linux/Unix的工具中，通常用\<来匹配“单词的起始位置”，用\>来匹配“单词的结束位置”，sed中的\y可以同时匹配这两个位置。
