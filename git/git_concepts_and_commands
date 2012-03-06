@@ -1,0 +1,78 @@
+Git thinks of its data more like a set of snapshots of a mini filesystem.
+Nearly every operation in git is local.
+Git uses SHA-1 hash to check-sum everything and ensure integrity.
+
+Git has three main states that your files can resides:
+
+	modified  : the data has been changed but has not staged (marked)
+
+	staged    : the modified data has been marked to go into next commit
+
+	committed : the data is already safely stored in your local database
+
+
+
+             Working Directory            |     Staging Area      |   .git dir
++---------------+-------------------------|-----------------------|------------+
+                |                         |                       |
+                |                         |                       |
+                |      +------------+  git add   +----------+ git commit +----+
+                |      |  modified  | ---------> |  staged  | ---------> |cmtd|
+                |      +------------+     |      +----------+     |      +----+
+                |           ^             |                       |
+                |           | edit        |                       |
+                |           |             |                       |
++---------+  git add   +------------+     |                       |
+|untracked| ----|----> | unmodified |     |                       |
++---------+     |      +------------+     |                       |
+                |                         |                       |
+                |                         |                       |
+                |                         |                       |
++---------------+-------------------------+-----------------------+------------+
+
+
+git init				create a git repository
+git clone git://github.com/example.git	clone from an existing repository
+
+git config --global user.name "name"
+git config --global user.email "abc@example.com"
+git config --global core.editor vi
+git config --list
+
+git status				checking the status of files
+git add					change the file status from untracked to tracked
+git add					change the file status from tracked but no staged to staged
+
+git diff				show what has been modified but not yet staged
+git diff --cached			show what has been staged but not yet committed
+git diff --staged			same as above, show differences between staged and last committed
+
+git commit				commit the staged files
+git commit -m "message"			commit with specified message
+git -a commit				skip the staging area and commit, automatically stage every file that is already tracked
+
+git commit --amend			change the last commit, such as commit message or add forgotten files
+git revert HEAD <filename>		unstage a staged file
+git checkout -- <filename>		unmodify a modified file, discard all changes
+
+git mv filename newname			rename a file in git (equivalent with: mv filename newname; git rm filename; git add newname)
+
+git rm -f filename			remove file from both git and the working directory
+git rm --cached filename		remove file from git (unstage) but keep it in  the working directory, make it untracked
+
+git remote				show the short name of remote repo
+git remote -v				show both the short name and URL of remote repo
+git remote add [shortname] [URL]	add a new repo as a shortname with its URL
+git fetch [remote-name]			fetch any new work that has been pushed to remote server since last clone or last fetch, and not merge automatically
+git pull 
+git push [remote-name] [branch-name]	push the local branch-name to the server remote-name
+git remote show [remote-name]		remote-name can be both shortname and URL, to show its URL and tracking branch information
+git remote rename <old> <new>		rename a remote from <old> to <new>
+git remote rm <remote-name>		remove a remote repo
+
+git log					show the commit history
+git log -p -2				show last 2 log entries in patch mode
+git log --stat				show the commit history with abbreviated stats
+git log --pretty=oneline		show the commit history each single line, others options: short, full, fuller
+git log --pretty=format:"%h - %an, %ar : %s"	show the commit log with specified format
+git log --since=2.weeks			time-limiting option, show commit log for the last 2 weeks
