@@ -76,3 +76,11 @@ git log --stat				show the commit history with abbreviated stats
 git log --pretty=oneline		show the commit history each single line, others options: short, full, fuller
 git log --pretty=format:"%h - %an, %ar : %s"	show the commit log with specified format
 git log --since=2.weeks			time-limiting option, show commit log for the last 2 weeks
+
+git remote set-url [--push] [remote-name] <URL>		change the URL (or only push URL) of the remote remote-name to <URL>.
+							This can be useful when using github, for example, clone from HTTPS URL 
+							repo will always ask github username and password when trying to push, 
+							even when you have add your public rsa key to the github. Then you will 
+							need to change the remote URL or only push URL to git:// and use ssh 
+							passphrase instead.  from http://stackoverflow.com/questions/6565357/git-
+							push-requires-username-and-password
