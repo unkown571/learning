@@ -1,0 +1,57 @@
+[jason@DreamGarden:~]$ sudo pacman -S mysql
+Password: 
+resolving dependencies...
+looking for inter-conflicts...
+
+Targets (3): libmysqlclient-5.5.21-1  mysql-clients-5.5.21-1  mysql-5.5.21-1
+
+Total Download Size:    12.17 MiB
+Total Installed Size:   85.91 MiB
+
+Proceed with installation? [Y/n] y
+:: Retrieving packages from extra...
+ libmysqlclient-5.5.21-1-x86_64             2.9 MiB  10.1M/s 00:00 [#####################################] 100%
+ mysql-clients-5.5.21-1-x86_64            820.4 KiB  10.3M/s 00:00 [#####################################] 100%
+ mysql-5.5.21-1-x86_64                      8.4 MiB  11.0M/s 00:01 [#####################################] 100%
+(3/3) checking package integrity                                   [#####################################] 100%
+(3/3) loading package files                                        [#####################################] 100%
+(3/3) checking for file conflicts                                  [#####################################] 100%
+(3/3) checking available disk space                                [#####################################] 100%
+(1/3) installing libmysqlclient                                    [#####################################] 100%
+(2/3) installing mysql-clients                                     [#####################################] 100%
+(3/3) installing mysql                                             [#####################################] 100%
+Installing MySQL system tables...
+OK
+Filling help tables...
+OK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !
+To do so, start the server, then issue the following commands:
+
+/usr/bin/mysqladmin -u root password 'new-password'
+/usr/bin/mysqladmin -u root -h DreamGarden password 'new-password'
+
+Alternatively you can run:
+/usr/bin/mysql_secure_installation
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the manual for more instructions.
+
+You can start the MySQL daemon with:
+cd /usr ; /usr/bin/mysqld_safe &
+
+You can test the MySQL daemon with mysql-test-run.pl
+cd /usr/mysql-test ; perl mysql-test-run.pl
+
+Please report any problems with the /usr/scripts/mysqlbug script!
+
+Optional dependencies for mysql
+    perl-dbi
+    perl-dbd-mysql
+

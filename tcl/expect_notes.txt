@@ -1,0 +1,85 @@
+#!/usr/bin/expect -f
+# http://wenku.baidu.com/view/b65e103610661ed9ad51f374.html?from=rec&pos=3&weight=3&lastweight=3&count=4
+
+if { $argc != 1 } {				# 脚本参数的个数
+	puts stderr "Usage: $argv0 <username>"	# 脚本名称可由$argv0获得，puts打印一行
+	exit 1					# 脚本退出命令
+}
+
+set password "mypassword"			# 对变量赋值使用set命令
+set username [ lindex $argv [expr $argc - 1]]	# list中的lindex命令，expr表达式
+set timeout 60					# 默认情况下，timeout是10秒
+
+# spawn命令会启动一个新的进程，在该进程中运行相应命令
+spawn sudo useradd -s /bin/bash -g mygroup -m $username
+# expect只能捕捉到spawn启动的进程的相关信息，主要包括标准
+# 输入的提示信息，eof和timeout
+expect {
+	"assword" { 
+		send_user "sudo now\n"		# send向spawn启动的进程发送信息
+		send "$password\n"		# send_user向用户发送信息，相当于日志
+		exp_continue			# 匹配后继续去匹配接下来的进程信息
+	}
+	eof {					#spawn程序结束或意外终止，会发送eof
+		send_user "eof\n"		#必须匹配，虽然有时不匹配也可运行，
+						#但不应依赖这种侥幸可行的情况
+	}
+}
+# 注意：上面这种expect方式不是串行执行的，而是并行执行的，看匹配到哪一个就执行那一个
+# 如果写成串行方式，即下面这样：
+expect "assword"
+send "$password\n"
+expect eof
+send_user "eof\n"
+#那么，第一次sudo时会正确执行，因为需要输入密码，但第二次可能就不提示输入密码了，
+# 则程序会在第一个expect位置无法匹配到assword，会按照timeout的设置进行等待
+# 可是如果spawn直接发出了eof，那么expect就不会等待而直接去执行eof了 这是就会报错
+# expect: spawn id exp6 not open，因为没有spawn在执行后面的expect脚本也会由于这个
+# 原因不再执行。 所以类似sudo这种命令分支不定的情况，例如ssh登陆是否出现(yes/no)
+# 的让确认ssh 可以的情况，最好是用并行方式处理
+
+# 还有一点需要说明，在spawn程序结束时才会发eof，没有结束时不发eof，所以类似ssh
+# 登陆这样的脚本，在登陆成功后，spawn的程序还没有结束，此时不必匹配eof，而是应该
+# 匹配命令提示符；此外在ssh登陆成功状态，不要spwan新命令，这会使上一个spawn即ssh
+# 结束，从而导致你这个新命令在ssh结束后在本地执行。
+
+
+
+Makefile的后缀规则：
+.c.o:
+            $(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
+注意后缀规则不允许任何的依赖文件
+要让make抓狂一些特定的后缀，可以使用.SUFFIXES来定义或删除
+.SUFFIXES:		#删除默认的后缀
+.SUFFIXES: .c .o .h	#定义自己的后缀
+
+Makefile的模式规则：
+%.d: %.c
+@set -e; rm -f $@; /
+$(CC) -M $(CPPFLAGS) $< > $@.$$$$; /
+sed 's,/($*/)/.o[ :]*,/1.o $@ : ,g' < $@.$$$$ > $@; /
+rm -f $@.$$$$
+
+这个规则的意思是，所有的[.d]文件依赖于[.c]文件，“rm -f $@”的意思是删除所有的目标，也就是[.d]文件，第二行的意思是，为每个依赖文件“$<”，也就是[.c]文件生成依赖文件，“$@”表示模式“%.d”文件，如果有一个C 文件是name.c，那么“%”就是“name”，“$$$$”意为一个随机编号，第二行生成的文件有可能是“name.d.12345”，第三行使用sed 命令做了一个替换，关于sed 命令的用法请参看相关的使用文档。第四行就是删除临时文件。
+总而言之，这个模式要做的事就是在编译器生成的依赖关系中加入[.d]文件的依赖，即把依赖关系：
+main.o : main.c defs.h
+转成：
+main.o main.d : main.c defs.h
+于是，我们的[.d]文件也会自动更新了，并会自动生成了，当然，你还可以在这个[.d]文件中加入的不只是依赖关系，包括生成的命令也可一并加入，让每个[.d]文件都包含一个完赖的规则。一旦我们完成这个工作，接下来，我们就要把这些自动生成的规则放进我们的主Makefile 中。我们可以使用Makefile 的“include”命令，来引入别的Makefile 文件（前面讲过），例如：
+sources = foo.c bar.c
+include $(sources:.c=.d)
+上述语句中的“$(sources:.c=.d)”中的“.c=.d”的意思是做一个替换，把变量
+$(sources)所有[.c]的字串都替换成[.d]，关于这个“替换”的内容，在后面我会有更
+为详细的讲述。当然，你得注意次序，因为include 是按次来载入文件，最先载入的[.d]
+文件中的目标会成为默认目标。
+
+%.o : %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$@ 是目标集合
+$% 当且仅当目标是库文件时，表示该库文件中的目标文件
+$< 依赖条件中的第一个
+$^ 依赖条件的集合
+$? 所有比目标新的依赖条件的集合
+
+在链接命令中给出所依赖的库时，需要注意库之间的依赖顺序，依赖其他库的库一定要放到被依赖库的前面，这样才能真正避免undefined reference的错误，完成编译链接。

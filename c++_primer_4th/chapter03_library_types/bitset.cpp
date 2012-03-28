@@ -90,6 +90,9 @@ int main()
 	cout << "ulong = " << ulong << endl;
 
 	cout << "bitvec2: " << bitvec2 << endl;
+	
+	bitvec1 = -256;
+	cout << "The bits reprentation of -256: " << bitvec1 << endl;
 
 
 	

@@ -1,0 +1,24 @@
+1. Literal constants
+   1) Numbers 
+     integers, such as 8  17  999999999
+     floating-point numbers, such as 6.789, 2.1E23,  3e-8
+     complex numbers, such as -5+2j, 1-j
+     no seperate 'long int' or 'short' type, the default integer is enough.
+   2) Strings
+      single quote string
+          'hello', 'It\' a string'
+      double quote string
+          "It's a string"
+	  "You an use \\ to \
+		  join the two lines"
+      triple quote (''' or """) string, such as 
+          '''This is a string'''
+	  ''' This is a demo for
+	  multi-line string.'''
+      raw string, prefixing by r or R, useful for regexp
+          r'^\s.*\d+$'
+	  R'newlines are indicated by \n'
+
+      By default, all strings are in unicode.
+
+ 

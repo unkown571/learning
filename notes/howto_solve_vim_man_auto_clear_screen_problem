@@ -1,0 +1,23 @@
+Problem:
+
+For example, use `ls' to list some files, and then use vi to view one of them 
+or just run a 'man  bash', after you exit from vi/man, the original screen has 
+been cleared, and you can't see the results listed by `ls'
+
+
+I search and see the vi manual , I find some solutions about vi such as:
+
+put 'set t_ti= t_te=' in ~/.vimrc
+
+But I found that it was not a prblem only with vi but also man, so I didn't try
+this solution.
+
+I tried to echo $TERM:
+$ echo $TERM
+xterm-color
+
+Then I tried to set TERM in .bashrc:
+export TERM='xterm-256color'
+
+
+the problem was solved.
