@@ -23,15 +23,13 @@ void insert_sort(int *a, size_t sz)
 {
 	for (size_t i = 1; i < sz; ++i)
 	{
-		int t;
-		size_t j;
-		//Note: because j is unsigned, when j == 0 then --j will be a very big number
+		//Note: if j is unsigned such as size_t, when j == 0 then --j will be a very big number
 		//so we should test to ensure j < i
-		for (j = i - 1; j >= 0 && j < i ; --j)
+		for (int j = i - 1; j >= 0; --j)
 		{
 			if (a[j] > a[j+1])
 			{
-				t = a[j+1];
+				int t = a[j+1];
 				a[j+1] = a[j];
 				a[j] = t;
 			}
