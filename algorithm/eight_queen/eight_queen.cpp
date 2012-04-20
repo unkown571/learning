@@ -4,6 +4,7 @@
  *       Filename:  eight_queen.cpp
  *
  *    Description:  the eight queen problem
+ *      Reference:  http://hi.baidu.com/ipress/blog/item/9b81341219949a51f919b8e2.html
  *
  *        Version:  1.0
  *        Created:  04/03/2012 04:02:36 PM
