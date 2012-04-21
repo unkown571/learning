@@ -1,0 +1,33 @@
+* 基于一个已存在SVN repository检出成一个git repo(类似于svn checkout)
+  $ git svn clone your_svn_repo_url
+  $ git svn clone -s your_svn_repo_url
+  注: git svn clone相当于先执行git svn init，然后再执行git svn fetch，几乎可接受所有git svn init及git svn fetch
+  能够接受的参数，如表示标准目录布局的-s,--stdlayout，还有分别指定布局目录的-T/-t/-b等
+
+* 从中心服务器的SVN repository获取最新更新(类似于svn update)
+  $ git svn rebase
+
+* 查看提交历史日志
+  $ git svn log
+  $ git svn log -v
+ 
+* 将本地代码同步到SVN服务器
+  $ git svn dcommit
+  git svn dcommit似乎不能单独提交某个本地版本的修改，而是一次批量提交所有与svn中心版本库的差异
+
+* git svn的一般使用流程
+  1) 使用git svn clone your_svn_repo_url获取一个初始的git repo
+  2) 修改本地代码，使用正常的git命令，如git add, git commit, git branch, git merge等进行本地代码的管理
+  3) 定期使用git svn rebase获取中心SVN repo的最新更新
+  4) 使用git svn dcommit将本地git repo中的修改同步到中心SVN repo
+     4a) 如果dcommit过程中没有冲突，则一切顺利完成
+     4b) 如果出现了冲突，则说明别人已经提交了跟本地冲突的更新，进行下面操作
+         i) git svn rebase获取该更新
+	ii) 打开冲突的文件，修改代码，解决冲突
+       iii) git add filename_of_the_conflict_file
+        iv) git svn rebase --continue 将解决冲突后的文件提交到本地git repo中
+	 v) git svn dcommit 成功提交到中心SVN repo
+
+References:
+[1] http://androider.iteye.com/blog/1423847
+[2] http://article.yeeyan.org/view/bianjiang/44287

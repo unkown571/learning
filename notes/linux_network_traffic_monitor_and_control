@@ -1,0 +1,5 @@
+1. cat /proc/net/dev, with this you can write your own scripts
+2. iftop, just like the top(1) for CPU usage
+3. ntop
+4. mrtg, multiple router traffic grapher
+5. tc, traffic control tools, add and delete or modify traffic control policies
