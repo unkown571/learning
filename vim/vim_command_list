@@ -1,0 +1,87 @@
+|Moving around|
+w	move forward to the start of next word or the first word of next line
+3w	move forward the cursor three words
+b	move backward to the start of the previous word
+2b	move backward to the start of the previous two words
+e	move forward to the next end of a word
+ge	move backward to the previous end of a word
+W/E	move forward by white-space separated WORDs
+B/gE	move backward by white-space separated WORDs
+
+^	move to the first non-blank character of the line
+0	move to the very first character of the line
+$	move to the end of a line
+N$	move to the end of the Nth line
+
+fx	find the first single character x forward
+3fx	find the 3rd single character x forward
+Fx	search to the left and find the first single character x
+2Fx	search to the left and find the second single character x
+tx	like "fx" except it stops one character before the searched character
+Tx	like "Fx" except it stops one character before the searched character
+;	repeat "fx" or "tx", i.e. forward
+,	repeat "Fx" or "Tx", i.e. backward
+f<ESC>	an aborted forward search and doesn't do anything
+
+%	move to the matching part of () [] or {} pairs, auto-search first ([{
+
+G	go to the end of the file
+33G	go the line 33
+gg	go to the first line of the file
+50%	move to halfway the file
+90%	move to near the end
+H	move to the first line you can see, stands for Home
+M	move to the middle line you can see, stands for Middle
+L	move to the last line you can see, stands for Last
+CTRL-G	tell the filename, linenum, totalnum, percentage and column
+:set number  display a line number in front of every line
+:set nonumber	     display a line number in front of every line
+:set ruler	     display the cursor position in the lower right corner
+
+CTRL-U		     scroll the viewing window up half a screen, i.e. scroll down text
+CTRL-D		     scroll the viewing window down half a screen, i.e. scroll up text
+CTRL-E		     scroll one line up, E stands for one line Extra
+CTRL-Y		     scroll one line down
+CTRL-F		     scroll Forward by a whole screen except for two lines
+CTRL-B		     scroll Backward by a whole screen except for two lines
+zz		     put the cursor line in the middle of the screen
+zt		     put the cursor line at the top the screen
+zb		     put the cursor line at the bottom the screen
+
+/		     search forward, .*[]^%/\?~$ have special meanings, \ maybe needed
+?		     search backward, 
+n		     find the next occurrence of the same string, 3n finds the third match
+N		     find the previous occurrence of the same string
+*		     search for the word under the cursor forward
+3*		     search for the third occurrence of the word under the cursor forward
+#		     search the word under the cursor backward
+/^the		     match "the" which is at the beginning of a line
+/the$		     match "the" which is at the end of a line
+/^the$		     match a single line consisting of "the"
+/the\>		     match words ending with "the"
+/\<the\>	     match exactly the word "the"
+/t.e		     match a string whoes first is 't', second any character and third is 'e'
+:set ignorecase	     	   math the word without case
+:set noignorecase	   math the word with case
+:set hlsearch		   	highlight all matches
+:set nohlsearch				  swith off the highlighting
+:nohlsearch				  	swith off the highlighting just once
+:set incsearch					      display the match while you are still typing it
+:set nowrapscan					      	      searching wraps around the end of the file
+
+``   go back where you jump from, jump means "G", "/ and n"
+CTRL-O	jump to the Older position
+CTRL-I	jump to the newer position
+:jumps	give a list of positions you jumped to
+ma	mark the place under the cursor a mark a, same for mb mc ... mz
+`a	move to the exectly column a mark, same for `b `c ... `z
+'a	move to the beginning the line containing the mark a
+''	jump back to where you were
+:marks	get a list of marks
+	'   The cursor position before doing a jump
+	"   The cursor position when last editing the file
+	[   Start of the last change
+	]   End of the last change
+
+
+|Making small changes|
