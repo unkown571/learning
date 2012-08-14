@@ -1,0 +1,273 @@
+administrator@ubuntu:/tmp$ svnadmin create simple_repo
+administrator@ubuntu:/tmp$ ls simple_repo/ -la
+总用量 32
+drwxr-xr-x  6 administrator administrator 4096 2012-08-14 20:48 .
+drwxrwxrwt 16 root          root          4096 2012-08-14 20:48 ..
+drwxr-xr-x  2 administrator administrator 4096 2012-08-14 20:48 conf
+drwxr-sr-x  6 administrator administrator 4096 2012-08-14 20:48 db
+-r--r--r--  1 administrator administrator    2 2012-08-14 20:48 format
+drwxr-xr-x  2 administrator administrator 4096 2012-08-14 20:48 hooks
+drwxr-xr-x  2 administrator administrator 4096 2012-08-14 20:48 locks
+-rw-r--r--  1 administrator administrator  229 2012-08-14 20:48 README.txt
+administrator@ubuntu:/tmp$ svn co file:///tmp/simple_repo/ testworkspace
+取出版本 0。
+administrator@ubuntu:/tmp$ cd testworkspace/
+administrator@ubuntu:/tmp/testworkspace$ ls
+administrator@ubuntu:/tmp/testworkspace$ vi hello.php
+administrator@ubuntu:/tmp/testworkspace$ svn st
+?       hello.php
+administrator@ubuntu:/tmp/testworkspace$ svn add hello.php 
+A         hello.php
+administrator@ubuntu:/tmp/testworkspace$ svn commit
+增加           hello.php
+传输文件数据 .
+提交后的版本为 1。
+administrator@ubuntu:/tmp/testworkspace$ cd ..
+administrator@ubuntu:/tmp$ cd testworkspace/
+administrator@ubuntu:/tmp/testworkspace$ ls
+hello.php
+administrator@ubuntu:/tmp/testworkspace$ vi hello.php 
+administrator@ubuntu:/tmp/testworkspace$ vi test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ php -q test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ vi test_json_decode.php 
+administrator@ubuntu:/tmp/testworkspace$ time php test_json_decode.php
+stdClass Object
+(
+    [id] => 0
+    [name] => zhangliancheng
+    [role] => developer
+)
+
+real	0m0.084s
+user	0m0.012s
+sys	0m0.008s
+administrator@ubuntu:/tmp/testworkspace$ php test_json_decode.php
+stdClass Object
+(
+    [id] => 0
+    [name] => zhangliancheng
+    [role] => developer
+)
+administrator@ubuntu:/tmp/testworkspace$ svn st
+?       test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ svn add test_json_decode.php 
+A         test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ svn commit
+增加           test_json_decode.php
+传输文件数据 .
+提交后的版本为 2。
+administrator@ubuntu:/tmp/testworkspace$ ls
+hello.php  test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ vi test_json_decode.php 
+administrator@ubuntu:/tmp/testworkspace$ php test_json_decode.php
+stdClass Object
+(
+    [id] => 0
+    [name] => zhangliancheng
+    [role] => developer
+)
+Array
+(
+    [id] => 0
+    [name] => zhangliancheng
+    [role] => developer
+)
+administrator@ubuntu:/tmp/testworkspace$ svn st
+M       test_json_decode.php
+administrator@ubuntu:/tmp/testworkspace$ svn commit 
+正在发送       test_json_decode.php
+传输文件数据 .
+提交后的版本为 3。
+administrator@ubuntu:/tmp/testworkspace$ cd ..
+administrator@ubuntu:/tmp$ git svn clone file:///tmp/simple_repo gitsvnworkspace
+Initialized empty Git repository in /tmp/gitsvnworkspace/.git/
+	A	hello.php
+r1 = fef4fd9034777662a0b54c393ff5211459ad7541 (refs/remotes/git-svn)
+	A	test_json_decode.php
+r2 = e8bede69298142ac8299fca6b83b9ee7af91cb1b (refs/remotes/git-svn)
+	M	test_json_decode.php
+r3 = e6fa058743790b3d5ccd01348c250af3e5e6c879 (refs/remotes/git-svn)
+Checked out HEAD:
+  file:///tmp/simple_repo r3
+administrator@ubuntu:/tmp$ cd gitsvnworkspace/
+administrator@ubuntu:/tmp/gitsvnworkspace$ git svn log
+------------------------------------------------------------------------
+r3 | administrator | 2012-08-14 20:54:51 +0800 (二, 14  8月 2012) | 2 lines
+
+add array result decoded from JSON string demo
+
+------------------------------------------------------------------------
+r2 | administrator | 2012-08-14 20:53:20 +0800 (二, 14  8月 2012) | 2 lines
+
+Add an JSON decode demo
+
+------------------------------------------------------------------------
+r1 | administrator | 2012-08-14 20:50:33 +0800 (二, 14  8月 2012) | 2 lines
+
+a helloworl php script
+
+------------------------------------------------------------------------
+administrator@ubuntu:/tmp/gitsvnworkspace$ git checkout -b test
+Switched to a new branch 'test'
+administrator@ubuntu:/tmp/gitsvnworkspace$ ls
+hello.php  test_json_decode.php
+administrator@ubuntu:/tmp/gitsvnworkspace$ vi hello.php 
+administrator@ubuntu:/tmp/gitsvnworkspace$ php hello.php
+Hello World
+Time used: 9.1075897216797E-5
+administrator@ubuntu:/tmp/gitsvnworkspace$ git status
+# On branch test
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   hello.php
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+administrator@ubuntu:/tmp/gitsvnworkspace$ git add hello.php
+administrator@ubuntu:/tmp/gitsvnworkspace$ git diff hello.php
+administrator@ubuntu:/tmp/gitsvnworkspace$ git diff --cached hello.php
+diff --git a/hello.php b/hello.php
+index 183cd3d..1c856bd 100644
+--- a/hello.php
++++ b/hello.php
+@@ -1,3 +1,7 @@
+ <?php
+ 
++$time_start = microtime(true);
+ echo "Hello World" . PHP_EOL;
++$time_end = microtime(true);
++$time_used = $time_end - $time_start;
++echo "Time used: $time_used" . PHP_EOL;
+administrator@ubuntu:/tmp/gitsvnworkspace$ git commit -m "add the time usage statistic."
+[test c5ae458] add the time usage statistic.
+ Committer: Administrator <administrator@ubuntu.(none)>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+If the identity used for this commit is wrong, you can fix it with:
+
+    git commit --amend --author='Your Name <you@example.com>'
+
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+administrator@ubuntu:/tmp/gitsvnworkspace$ git config --global user.name "zhangliancheng"
+administrator@ubuntu:/tmp/gitsvnworkspace$ git config --global user.email "zhangliancheng@baiu.com"
+administrator@ubuntu:/tmp/gitsvnworkspace$ git commit -m "add the time usage statistic."
+# On branch test
+nothing to commit (working directory clean)
+administrator@ubuntu:/tmp/gitsvnworkspace$ git log
+commit c5ae458cd8df13350a746aa285329ce2b363388a
+Author: Administrator <administrator@ubuntu.(none)>
+Date:   Tue Aug 14 21:08:09 2012 +0800
+
+    add the time usage statistic.
+
+commit e6fa058743790b3d5ccd01348c250af3e5e6c879
+Author: administrator <administrator@611ebcab-389f-4fab-a3cd-b0e591eb6f1d>
+Date:   Tue Aug 14 12:54:51 2012 +0000
+
+    add array result decoded from JSON string demo
+    
+    
+    git-svn-id: file:///tmp/simple_repo@3 611ebcab-389f-4fab-a3cd-b0e591eb6f1d
+
+commit e8bede69298142ac8299fca6b83b9ee7af91cb1b
+Author: administrator <administrator@611ebcab-389f-4fab-a3cd-b0e591eb6f1d>
+Date:   Tue Aug 14 12:53:20 2012 +0000
+
+    Add an JSON decode demo
+    
+    
+    git-svn-id: file:///tmp/simple_repo@2 611ebcab-389f-4fab-a3cd-b0e591eb6f1d
+
+commit fef4fd9034777662a0b54c393ff5211459ad7541
+Author: administrator <administrator@611ebcab-389f-4fab-a3cd-b0e591eb6f1d>
+Date:   Tue Aug 14 12:50:33 2012 +0000
+
+    a helloworl php script
+    
+    
+    git-svn-id: file:///tmp/simple_repo@1 611ebcab-389f-4fab-a3cd-b0e591eb6f1d
+
+administrator@ubuntu:/tmp/gitsvnworkspace$ git stash 
+No local changes to save
+administrator@ubuntu:/tmp/gitsvnworkspace$ git checkout master 
+Switched to branch 'master'
+administrator@ubuntu:/tmp/gitsvnworkspace$ git svn rebase 
+Current branch master is up to date.
+administrator@ubuntu:/tmp/gitsvnworkspace$ git merge test 
+Updating e6fa058..c5ae458
+Fast-forward
+ hello.php |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+administrator@ubuntu:/tmp/testworkspace$ svn log
+------------------------------------------------------------------------
+r3 | administrator | 2012-08-14 20:54:51 +0800 (二, 2012-08-14) | 2 行
+
+add array result decoded from JSON string demo
+
+------------------------------------------------------------------------
+r2 | administrator | 2012-08-14 20:53:20 +0800 (二, 2012-08-14) | 2 行
+
+Add an JSON decode demo
+
+------------------------------------------------------------------------
+r1 | administrator | 2012-08-14 20:50:33 +0800 (二, 2012-08-14) | 2 行
+
+a helloworl php script
+
+------------------------------------------------------------------------
+
+
+administrator@ubuntu:/tmp/gitsvnworkspace$ git svn dcommit 
+Committing to file:///tmp/simple_repo ...
+	M	hello.php
+Committed r4
+	M	hello.php
+r4 = 4c323588e9aed73631ec8017d4021250eb19ae1d (refs/remotes/git-svn)
+No changes between current HEAD and refs/remotes/git-svn
+Resetting to the latest refs/remotes/git-svn
+
+administrator@ubuntu:/tmp/testworkspace$ svn up
+U    hello.php
+更新到版本 4。
+administrator@ubuntu:/tmp/testworkspace$ svn log
+------------------------------------------------------------------------
+r4 | administrator | 2012-08-14 21:12:32 +0800 (二, 2012-08-14) | 1 行
+
+add the time usage statistic.
+------------------------------------------------------------------------
+r3 | administrator | 2012-08-14 20:54:51 +0800 (二, 2012-08-14) | 2 行
+
+add array result decoded from JSON string demo
+
+------------------------------------------------------------------------
+r2 | administrator | 2012-08-14 20:53:20 +0800 (二, 2012-08-14) | 2 行
+
+Add an JSON decode demo
+
+------------------------------------------------------------------------
+r1 | administrator | 2012-08-14 20:50:33 +0800 (二, 2012-08-14) | 2 行
+
+a helloworl php script
+
+------------------------------------------------------------------------
+administrator@ubuntu:/tmp/testworkspace$ 
+
+administrator@ubuntu:/tmp/gitsvnworkspace$ git checkout test 
+Switched to branch 'test'
+administrator@ubuntu:/tmp/gitsvnworkspace$ git rebase master 
+First, rewinding head to replay your work on top of it...
+Nothing to do.
+administrator@ubuntu:/tmp/gitsvnworkspace$ git stash pop
+Nothing to apply
+administrator@ubuntu:/tmp/gitsvnworkspace$ 
+
+References:
+[1] Git SVN工作流程 http://blog.sina.com.cn/s/blog_4c5034720100v41t.html
+[2] git rebase小计  http://www.cnblogs.com/kym/archive/2010/08/12/1797937.html
